@@ -9,11 +9,15 @@ macro_rules! sum {
 }
 
 fn main() -> io::Result<()> {
-    /*let stdin = io::stdin();
+    let stdin = io::stdin();
     let s: Vec<String> = stdin.lock().lines().collect::<Result<_,_>>()?;
-    let nums: Vec<i32> = s[0].split_whitespace().map(|s| s.parse().unwrap()).collect();*/
+    //let nums: Vec<i32> = s[0].split_whitespace().map(|s| s.parse().unwrap()).collect();
+    let n = s[0].parse::<i32>().unwrap();
+    let raw: *const i32 = &n;
 
-    println!("{}", sum!(1,2,3,4,5));
+    unsafe {
+        println!("{}", *raw);
+    }
 
     Ok(())
 }
