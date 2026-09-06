@@ -1,36 +1,31 @@
 use std::cell::RefCell;
+use std::future::{Future};
 use std::io::{self, BufRead};
+use std::pin::Pin;
 use std::rc::Rc;
+use std::task::{Context, Poll};
 
-trait Shape {fn area(&self) -> f64;}
-struct Square {side:f64}
-struct Triange {base:f64, height: f64}
+struct Doubler { n: i32 }
 
-impl Shape for Square {
-    fn area(&self) -> f64 {
-        self.side.powi(2)
+impl Future for Doubler {
+    type Output = i32;
+    fn poll(self: Pin<&mut Self>, _cx: &mut Context) -> Poll<i32> {
+        Poll::Ready(self.n * 2)
     }
 }
 
-impl Shape for Triange {
-    fn area(&self) -> f64 {
-        self.base * self.height * 0.5
-    }
+fn double(n: i32) -> Doubler {
+    Doubler { n: n }
 }
 
 fn main() -> io::Result<()> {
-    let stdin = io::stdin();
-    let s: Vec<String> = stdin.lock().lines().collect::<Result<_,_>>()?;
+    //let stdin = io::stdin();
+    //let s: Vec<String> = stdin.lock().lines().collect::<Result<_,_>>()?;
     //let nums: Vec<i32> = s[0].split_whitespace().map(|s| s.parse().unwrap()).collect();
 
-    let mut shapes: Vec<Box<dyn Shape>> = vec![];
+    let d = double(7);
 
-    shapes.push(Box::new(Square {side: 3.0}));
-    shapes.push(Box::new(Triange {base: 4.0, height:5.0}));
-
-    for n in &shapes {
-        println!("{:.2}", n.area());
-    }
+    println!("{}", "created future");
 
 
     Ok(())
